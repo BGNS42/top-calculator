@@ -4,6 +4,7 @@ let n2 = null;
 let op = "";
 
 const buttons = document.querySelectorAll("button");
+const visor = document.querySelector(".visor");
 
 let display = {
     n1: "",
@@ -71,13 +72,27 @@ function checkOperators(display, button) {
     if (display.op === undefined && display.n1 === "" && display.result) {
         display.n1 = display.result;
         display.op = button.textContent;
+    } else if(display.op === undefined && display.n1 === "" && display.result === undefined) {
+        return;
     } else if (display.op === undefined) {
         display.op = button.textContent;
     } else {
+        console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${operate(display.op, display.n1, display.n2)}`); // histórico no log após clicar "operators"
         display.n1 = operate(display.op, display.n1, display.n2)
         display.n2 = "";
         display.op = button.textContent;
     }
+}
+
+function resetDisplay(display) {
+    display.n1 = "";
+    display.n2 = "";
+    display.op = undefined;
+}
+
+function resetAll(display){
+    resetDisplay(display);
+    display.result = undefined;
 }
 
 // Listeners
@@ -94,13 +109,16 @@ buttons.forEach(function(button) {
                 checkOperators(display, button)
                 break;
             case "=":
-                display.result = operate(display.op, display.n1, display.n2)
-                display.n1 = "";
-                display.n2 = "";
-                display.op = undefined;
+                display.result = operate(display.op, display.n1, display.n2);
+                console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
+                resetDisplay(display);
+                break;
+            case "clear":
+                resetAll(display);
                 break;
         }
         console.log(display);
+        visor.textContent = display.n2 || display.n1 || display.result;
     })
 });
 
