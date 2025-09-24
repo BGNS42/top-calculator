@@ -47,26 +47,36 @@ function operate(op, n1, n2) {
     };
 }
 
-function checkInput(display, button){
+function checkNumbers(display, button){
     if(button.textContent === "0"){
         if(display.op === undefined){
             if(display.n1 != "") {
                 display.n1 += button.textContent;
             }
-        }
-        else {
+        } else {
             if(display.n2 != "") {
                 display.n2 += button.textContent;
             }
         }
-    }
-    else {
+    } else {
         if (display.op === undefined){
         display.n1 = display.n1 + button.textContent;
-        }
-        else {
+        } else {
             display.n2 = display.n2 + button.textContent;
         }
+    }
+}
+
+function checkOperators(display, button) {
+    if (display.op === undefined && display.n1 === "" && display.result) {
+        display.n1 = display.result;
+        display.op = button.textContent;
+    } else if (display.op === undefined) {
+        display.op = button.textContent;
+    } else {
+        display.n1 = operate(display.op, display.n1, display.n2)
+        display.n2 = "";
+        display.op = button.textContent;
     }
 }
 
@@ -74,47 +84,14 @@ function checkInput(display, button){
 
 buttons.forEach(function(button) {
     button.addEventListener("click", () => {
-        console.log(button.classList);
+        // console.log(button.classList);
         const btnClass = button.classList[0];
-        const valor = button.textContent;
         switch(btnClass) {
             case "numbers":
-                checkInput(display, button);
+                checkNumbers(display, button);
                 break;
-            case "1":
-                if (display.op === undefined){
-                    display.n1 = display.n1 + button.textContent;
-                }
-                else {
-                    display.n2 = display.n2 + button.textContent;
-                }
-                break;
-            case "+":
-                if (display.op === undefined && display.n1 === "" && display.result) {
-                    display.n1 = display.result;
-                    display.op = button.textContent;
-                }
-                else if (display.op === undefined){
-                    display.op = button.textContent;
-                }
-                else {
-                    display.n1 = operate(display.op, display.n1, display.n2)
-                    display.n2 = "";
-                    display.op = button.textContent;
-                }
-                break;
-            case "-":
-                if (display.op === undefined){
-                    if(display.n1 == "") {
-                        display.n1 = display.result;
-                    }
-                    display.op = button.textContent;
-                }
-                else {
-                    display.n1 = operate(display.op, display.n1, display.n2)
-                    display.n2 = "";
-                    display.op = button.textContent;
-                }
+            case "operators":
+                checkOperators(display, button)
                 break;
             case "=":
                 display.result = operate(display.op, display.n1, display.n2)
