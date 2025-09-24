@@ -85,3 +85,13 @@ button {
     height: 30px;
     margin-top: 4px;
 }
+
+.operatorButtons button {
+    background-color: lightgoldenrodyellow;
+}
+
+.clear,
+.signal,
+.percent {
+    background-color: lightgray;
+}
