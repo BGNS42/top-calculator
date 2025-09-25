@@ -24,7 +24,9 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if(+a === 0 || +b === 0) {
-        return (new Error("Do not divide by 0"));
+        //throw new Error("divided by 0")
+        alert("Cannot divide by 0")
+        return "0";
     } else {
         return +a / +b;
     }
@@ -57,7 +59,7 @@ function checkNumbers(display, button){
         }
 }
 
-function checkOperators(display, button) { 
+function checkOperators(display, button) {
     if (display.op === undefined && display.n1 === "" && display.result) {
         display.n1 = display.result;
         display.op = button.textContent;
@@ -77,7 +79,7 @@ function checkOperators(display, button) {
 
 function checkResult(display) {
     if(display.n2 === "" || display.op === undefined) return;
-    
+
     display.result = operate(display.op, display.n1, display.n2);
     if(display.result === 0) display.result = "0";
     console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
@@ -123,7 +125,7 @@ function resizeVisorText(element) {
         visor.style.fontSize = "10px";
     }
     if (visor.textContent.length > 25) {
-    visor.style.fontSize = "8px";
+        visor.style.fontSize = "8px";
     }
 }
 
