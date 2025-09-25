@@ -11,19 +11,20 @@ const display = {
 // Math functions
 
 function add(a, b) {
-    return +a + +b;
+    return a + b;
 }
 
 function subtract(a, b) {
     return a - b;
 }
 
-function multiply(a, b){
-    return a * b;
+function multiply(a, b) {
+    return parseFloat(a * b);
 }
 
-function divide(a, b){
-    return a / b;
+function divide(a, b) {
+    let divs = (a / b)
+    return parseFloat(divs);
 }
 
 function operate(op, n1, n2) {
@@ -84,35 +85,48 @@ function checkOperators(display, button) {
 }
 
 function checkResult(display) {
-    if(display.n2 === "" || display.op === undefined) return; 
+    if(display.n2 === "" || display.op === undefined) return;
+
     display.result = operate(display.op, display.n1, display.n2);
-    if(Object.keys(display.result).length > 10) {
-        display.result = display.result.toFixed(9);
-    } else {
-        console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
-        resetDisplay(display);
-    }
+    console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
+    resetOperation(display);
 }
 
 function checkDisplay(display) {
     let textoVisor = display.n2 || display.n1 || display.result || "";
-    if(typeof textoVisor === "number" && Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
-        return textoVisor = textoVisor.toExponential()
-    }
+    if(typeof textoVisor === "number") {
+        if (Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
+            return textoVisor.toExponential();
+        }
+        if(!Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
+            return Number(textoVisor.toFixed(9));
+        }   
+    } 
     return textoVisor;   
 }
 
-function resetDisplay(display) {
+function resetOperation(display) {
     display.n1 = "";
     display.n2 = "";
     display.op = undefined;
 }
 
-function resetAll(display){
-    resetDisplay(display);
+function resetDisplay(display){
+    resetOperation(display);
     display.result = undefined;
 }
 
+function resizeVisorText(element) {
+    if(visor.textContent.length < 10) {
+        visor.style.fontSize = "x-large";
+    }
+    if (visor.textContent.length > 10) {
+        visor.style.fontSize = "medium";
+    }
+    if (visor.textContent.length > 15) {
+        visor.style.fontSize = "small";
+    }
+}
 
 // Listeners
 
@@ -131,11 +145,12 @@ buttons.forEach(function(button) {
                 checkResult(display);
                 break;
             case "clear":
-                resetAll(display);
+                resetDisplay(display);
                 break;
         }
         console.log(display);
         visor.textContent = checkDisplay(display);
+        resizeVisorText(visor);
     });
 });
 
