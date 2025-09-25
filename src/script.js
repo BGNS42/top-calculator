@@ -1,12 +1,12 @@
 // variables
-let n1 = null;
-let n2 = null;
-let op = "";
+// let n1 = null;
+// let n2 = null;
+// let op = "";
 
 const buttons = document.querySelectorAll("button");
 const visor = document.querySelector(".visor");
 
-let display = {
+const display = {
     n1: "",
     n2: "",
 };
