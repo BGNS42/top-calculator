@@ -23,8 +23,7 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-    let divs = (a / b)
-    return parseFloat(divs);
+    return a / b;
 }
 
 function operate(op, n1, n2) {
