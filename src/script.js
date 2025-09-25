@@ -84,6 +84,24 @@ function checkOperators(display, button) {
     }
 }
 
+function checkResult(display) {
+    display.result = operate(display.op, display.n1, display.n2);
+    if(Object.keys(display.result).length > 10) {
+        display.result = display.result.toFixed(9);
+    } else {
+        console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
+        resetDisplay(display);
+    }
+}
+
+function checkDisplay(display) {
+    let textoVisor = display.n2 || display.n1 || display.result || "";
+    if(typeof textoVisor === "number" && Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
+        return textoVisor = textoVisor.toExponential()
+    }
+    return textoVisor;   
+}
+
 function resetDisplay(display) {
     display.n1 = "";
     display.n2 = "";
@@ -94,6 +112,7 @@ function resetAll(display){
     resetDisplay(display);
     display.result = undefined;
 }
+
 
 // Listeners
 
@@ -109,17 +128,15 @@ buttons.forEach(function(button) {
                 checkOperators(display, button)
                 break;
             case "=":
-                display.result = operate(display.op, display.n1, display.n2);
-                console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
-                resetDisplay(display);
+                checkResult(display);
                 break;
             case "clear":
                 resetAll(display);
                 break;
         }
         console.log(display);
-        visor.textContent = display.n2 || display.n1 || display.result;
-    })
+        visor.textContent = checkDisplay(display);
+    });
 });
 
 
