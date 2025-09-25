@@ -11,19 +11,23 @@ const display = {
 // Math functions
 
 function add(a, b) {
-    return a + b;
+    return +a + +b;
 }
 
 function subtract(a, b) {
-    return a - b;
+    return +a - +b;
 }
 
 function multiply(a, b) {
-    return parseFloat(a * b);
+    return +a * +b;
 }
 
 function divide(a, b) {
-    return a / b;
+    if(+a === 0 || +b === 0) {
+        return (new Error("Do not divide by 0"));
+    } else {
+        return +a / +b;
+    }
 }
 
 function operate(op, n1, n2) {
@@ -46,23 +50,11 @@ function operate(op, n1, n2) {
 }
 
 function checkNumbers(display, button){
-    if(button.textContent === "0"){
-        if(display.op === undefined){
-            if(display.n1 != "") {
-                display.n1 += button.textContent;
-            }
-        } else {
-            if(display.n2 != "") {
-                display.n2 += button.textContent;
-            }
-        }
-    } else {
         if (display.op === undefined){
         display.n1 = display.n1 + button.textContent;
         } else {
             display.n2 = display.n2 + button.textContent;
         }
-    }
 }
 
 function checkOperators(display, button) { 
@@ -85,9 +77,11 @@ function checkOperators(display, button) {
 
 function checkResult(display) {
     if(display.n2 === "" || display.op === undefined) return;
-
+    
     display.result = operate(display.op, display.n1, display.n2);
+    if(display.result === 0) display.result = "0";
     console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
+    
     resetOperation(display);
 }
 
@@ -98,7 +92,7 @@ function checkDisplay(display) {
             return textoVisor.toExponential();
         }
         if(!Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
-            return Number(textoVisor.toFixed(9));
+            return Number(textoVisor.toFixed(30));
         }   
     } 
     return textoVisor;   
@@ -124,6 +118,12 @@ function resizeVisorText(element) {
     }
     if (visor.textContent.length > 15) {
         visor.style.fontSize = "small";
+    }
+    if (visor.textContent.length > 20) {
+        visor.style.fontSize = "10px";
+    }
+    if (visor.textContent.length > 25) {
+    visor.style.fontSize = "8px";
     }
 }
 
