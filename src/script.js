@@ -65,12 +65,14 @@ function checkNumbers(display, button){
     }
 }
 
-function checkOperators(display, button) {
+function checkOperators(display, button) { 
     if (display.op === undefined && display.n1 === "" && display.result) {
         display.n1 = display.result;
         display.op = button.textContent;
     } else if(display.op === undefined && display.n1 === "" && display.result === undefined) {
         return;
+    } else if (display.n2 === "" && display.op != undefined) {
+        display.op = button.textContent;
     } else if (display.op === undefined) {
         display.op = button.textContent;
     } else {
@@ -82,6 +84,7 @@ function checkOperators(display, button) {
 }
 
 function checkResult(display) {
+    if(display.n2 === "" || display.op === undefined) return; 
     display.result = operate(display.op, display.n1, display.n2);
     if(Object.keys(display.result).length > 10) {
         display.result = display.result.toFixed(9);
