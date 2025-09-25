@@ -1,7 +1,4 @@
 // variables
-// let n1 = null;
-// let n2 = null;
-// let op = "";
 
 const buttons = document.querySelectorAll("button");
 const visor = document.querySelector(".visor");
