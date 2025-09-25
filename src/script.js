@@ -25,7 +25,7 @@ function multiply(a, b) {
 function divide(a, b) {
     if(+a === 0 || +b === 0) {
         //throw new Error("divided by 0")
-        alert("Cannot divide by 0")
+        alert("ERROR: Cannot divide by 0")
         return "0";
     } else {
         return +a / +b;
@@ -52,11 +52,12 @@ function operate(op, n1, n2) {
 }
 
 function checkNumbers(display, button){
-        if (display.op === undefined){
-        display.n1 = display.n1 + button.textContent;
-        } else {
-            display.n2 = display.n2 + button.textContent;
-        }
+    if(display.result) display.result = undefined;
+    if (display.op === undefined){
+    display.n1 = display.n1 + button.textContent;
+    } else {
+        display.n2 = display.n2 + button.textContent;
+    }
 }
 
 function checkOperators(display, button) {
@@ -90,7 +91,7 @@ function checkResult(display) {
 function checkDisplay(display) {
     let textoVisor = display.n2 || display.n1 || display.result || "";
     if(typeof textoVisor === "number") {
-        if (Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
+        if(Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
             return textoVisor.toExponential();
         }
         if(!Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
@@ -106,7 +107,7 @@ function resetOperation(display) {
     display.op = undefined;
 }
 
-function resetDisplay(display){
+function resetDisplay(display) {
     resetOperation(display);
     display.result = undefined;
 }
@@ -115,16 +116,16 @@ function resizeVisorText(element) {
     if(visor.textContent.length < 10) {
         visor.style.fontSize = "x-large";
     }
-    if (visor.textContent.length > 10) {
+    if(visor.textContent.length > 10) {
         visor.style.fontSize = "medium";
     }
-    if (visor.textContent.length > 15) {
+    if(visor.textContent.length > 15) {
         visor.style.fontSize = "small";
     }
-    if (visor.textContent.length > 20) {
+    if(visor.textContent.length > 20) {
         visor.style.fontSize = "10px";
     }
-    if (visor.textContent.length > 25) {
+    if(visor.textContent.length > 25) {
         visor.style.fontSize = "8px";
     }
 }
