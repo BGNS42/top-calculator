@@ -77,7 +77,10 @@ function checkOperators(display, button) {
     } else if (display.op === undefined) {
         display.op = button.textContent;
     } else {
-        console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${operate(display.op, display.n1, display.n2)}`); // histórico no log após clicar "operators"
+        
+        // histórico no log após clicar "operators"
+        console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${operate(display.op, display.n1, display.n2)}`);
+        
         display.n1 = operate(display.op, display.n1, display.n2)
         display.n2 = "";
         display.op = button.textContent;
@@ -88,16 +91,40 @@ function checkResult(display) {
     if(display.n2 === "" || display.op === undefined) return;
 
     display.result = operate(display.op, display.n1, display.n2);
+    
     if(display.result === 0) display.result = "0";
-    console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); // histórico no log após clicar "="
+    
+    // histórico no log após clicar "="
+    console.log(`Operação: ${display.n1} ${display.op} ${display.n2} = ${display.result}`); 
     
     resetOperation(display);
 }
 
+function checkSignal(display) {
+    if (display.n1.toString() === "0") {
+        return;
+    } else if (display.n2.toString() === "0") {
+        return;
+    }
+
+    if (display.n1 && !display.n2) {
+        if (!display.n1.toString().includes("-")) {
+            display.n1 = `-${display.n1}`;
+        } else {
+            display.n1 = `${display.n1}`;
+        }
+    }
+    if (display.n1 && display.n2) {
+        if (!display.n2.toString().includes("-")) {
+            display.n2 = `-${display.n2}`;
+        } else {
+            display.n2 = `${display.n2}`;
+        }
+    }
+}
+
 function checkDisplay(display) {
     let textoVisor = display.n2 || display.n1 || display.result || "";
-
-    //if(textoVisor === 0) return "0";
 
     if(typeof textoVisor === "number") {
         if(textoVisor.toString().length > 15) {
@@ -180,13 +207,7 @@ buttons.forEach(function(button) {
                 }
                 break;
             case "signal":
-                if(display.n1 && !display.n2) {
-                    if(!display.n1.toString().includes("-")) {
-                        display.n1 = `-${display.n1}`;
-                    } else {
-                        display.n1 = `${display.n1}`;
-                    }
-                }
+                checkSignal(display);
                 break;
         }
 
