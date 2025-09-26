@@ -10,53 +10,55 @@ const display = {
 
 // Math functions
 
-function add(a, b) {
-    return +a + +b;
-}
-
-function subtract(a, b) {
-    return +a - +b;
-}
-
-function multiply(a, b) {
-    return +a * +b;
-}
-
-function divide(a, b) {
-    if(+a === 0 || +b === 0) {
-        //throw new Error("divided by 0")
-        alert("ERROR: Cannot divide by 0")
-        return "0";
-    } else {
-        return +a / +b;
-    }
-}
-
 function operate(op, n1, n2) {
+    let result;
+
     switch (op) {
         case "+":
-            return add(n1, n2);
+            result = +n1 + +n2;
             break;
         case "-":
-            return subtract(n1, n2);
+            result = +n1 - +n2;
             break;
         case "*":
-            return multiply(n1, n2);
+            result = +n1 * +n2;
             break;
         case "/":
-            return divide(n1, n2);
+            if(+n1 === 0 || +n2 === 0) {
+                //throw new Error("divided by 0");
+                alert("ERROR: Cannot divide by 0");
+                return "0";
+            } else {
+                result = +n1 / +n2;
+            }
             break;
         default:
-            break;
+            return;
     };
+    
+    // checks for decimals and round it
+    if(result % 1 !== 0) {
+        result = parseFloat(result.toFixed(4));
+    }
+
+    return result;
 }
 
 function checkNumbers(display, button){
     if(display.result) display.result = undefined;
+
+    const inputChar = button.textContent;
+
     if (display.op === undefined){
-    display.n1 = display.n1 + button.textContent;
+        if (inputChar === "." && display.n1.includes(".")) { // checks if there is already a "."
+            return;
+        }
+        display.n1 += inputChar;
     } else {
-        display.n2 = display.n2 + button.textContent;
+        if (inputChar === "." && display.n2.includes(".")) {
+            return;
+        }
+        display.n2 += inputChar;
     }
 }
 
@@ -90,12 +92,19 @@ function checkResult(display) {
 
 function checkDisplay(display) {
     let textoVisor = display.n2 || display.n1 || display.result || "";
+
+    //if(textoVisor === 0) return "0";
+
     if(typeof textoVisor === "number") {
-        if(Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
-            return textoVisor.toExponential();
+        if(textoVisor.toString().length > 15) {
+            return textoVisor.toExponential(4);
         }
-        if(!Number.isInteger(textoVisor) && textoVisor.toString().length > 10) {
-            return Number(textoVisor.toFixed(30));
+
+        const decimalPart = textoVisor.toString().split('.')[1];
+        //console.log(`Decimal part: ${decimalPart}`);
+
+        if(decimalPart && decimalPart.length > 4) {
+            return parseFloat(textoVisor.toFixed(4));
         }   
     } 
     return textoVisor;   
@@ -125,7 +134,7 @@ function resizeVisorText(element) {
     if(visor.textContent.length > 20) {
         visor.style.fontSize = "10px";
     }
-    if(visor.textContent.length > 25) {
+    if(visor.textContent.length > 23) {
         visor.style.fontSize = "8px";
     }
 }
