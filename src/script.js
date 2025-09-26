@@ -228,7 +228,6 @@ buttons.forEach(function(button) {
 
 document.addEventListener("keydown", (e) => {
     let key = e.key;
-    e.preventDefault();
 
     if (key === "Enter") {
         key = "=";
@@ -247,6 +246,7 @@ document.addEventListener("keydown", (e) => {
     }
 
     const targetButton = Array.from(buttons).find(button => button.textContent === key);
+
     if (targetButton) {
         e.preventDefault();
         targetButton.click();
