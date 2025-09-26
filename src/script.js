@@ -219,10 +219,21 @@ buttons.forEach(function(button) {
 
         console.log(display);
         visor.textContent = checkDisplay(display);
-        resizeVisorText(visor);
+        resizeVisorText(visor);  
     });
 });
 
+document.addEventListener("keydown", (e) => {
+    if (e.key.match(/[0-9]/)) {
+        console.log(e.key);
+    }
+    if (e.key.match(/^[+\-*/%]$/)) {
+        console.log(e.key);
+    }
+    if (e.key.match(/^[=]$/) || e.key.match("Enter")) {
+        console.log(e.key);
+    }
+});
 
 // Output Log
 
