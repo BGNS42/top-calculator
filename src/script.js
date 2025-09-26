@@ -140,6 +140,14 @@ function checkDisplay(display) {
     return textoVisor;   
 }
 
+function convertPercent(display) {
+    if (display.n2 !== "") {
+        display.n2 = display.n2 / 100;
+    } else if (display.n1 !== "") {
+        display.n1 = display.n1 / 100;
+    }
+}
+
 function resetOperation(display) {
     display.n1 = "";
     display.n2 = "";
@@ -200,6 +208,9 @@ buttons.forEach(function(button) {
                 break;
             case "signal":
                 checkSignal(display);
+                break;
+            case "percent":
+                convertPercent(display);
                 break;
         }
 
