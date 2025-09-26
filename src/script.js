@@ -58,6 +58,8 @@ function checkNumbers(display, button) {
             return;
         }
         display.n1 += inputChar;
+    } else if (!display.op && display.n2 === "") {
+        display.n1 += inputChar;
     } else {
         if (inputChar === "." && display.n2.includes(".")) {
             return;
@@ -73,7 +75,8 @@ function checkOperators(display, button) {
     } else if (display.op === undefined && display.n1 === "" && display.result === undefined) {
         return;
     } else if (display.n2 === "" && display.op != undefined) {
-        display.op = button.textContent;
+        return;
+        //display.op = button.textContent;
     } else if (display.op === undefined) {
         display.op = button.textContent;
     } else {
@@ -100,32 +103,28 @@ function checkResult(display) {
     resetOperation(display);
 }
 
+
 function checkSignal(display) {
-    if (display.n1.toString() === "0") {
-        return;
-    } else if (display.n2.toString() === "0") {
+    let target = display.op ? "n2" : "n1";
+
+    console.log(target)
+
+    if (display[target] === "0") { // if number is 0, do nothing
         return;
     }
 
-    if (display.n1 && !display.n2) {
-        if (!display.n1.toString().includes("-")) {
-            display.n1 = `-${display.n1}`;
-        } else {
-            display.n1 = `${display.n1}`;
-        }
-    }
-    if (display.n1 && display.n2) {
-        if (!display.n2.toString().includes("-")) {
-            display.n2 = `-${display.n2}`;
-        } else {
-            display.n2 = `${display.n2}`;
-        }
+    if (display[target].toString().startsWith("-")) {
+        display[target] = display[target].toString().slice(1);
+    } else {
+        display[target] = `-${display[target]}`;
     }
 }
 
 function checkDisplay(display) {
-    let textoVisor = display.n2 || display.n1 || display.result || "";
+    let textoVisor = display.n2 || display.op || display.n1 || display.result || "";
 
+    if (textoVisor === 0) textoVisor = "0";
+    
     if(typeof textoVisor === "number") {
         if(textoVisor.toString().length > 15) {
             return textoVisor.toExponential(4);
@@ -153,34 +152,27 @@ function resetDisplay(display) {
 }
 
 function eraseNum(display) {
-    if(display.n1 && !display.n2) {
-        console.log(typeof display.n1)
-        display.n1 = display.n1.toString().slice(0, -1);
-    }
-    if(display.n1 && display.n2) {
+    if (display.n2 !== "") { // highest condition. If n2 has a number, erase is for n2
         display.n2 = display.n2.toString().slice(0, -1);
+    } else if (display.op !== undefined) { // if !n2 and op, so the erase is for op
+        display.op = undefined;
+    } else if (display.n1 !== "") { // last priority. if there's only n1, erase for n1
+        display.n1 = display.n1.toString().slice(0, -1);
     }
 }
 
 function resizeVisorText(visor) {
     if(visor.textContent.length < 10) {
         visor.style.fontSize = "x-large";
-    }
-    if(visor.textContent.length > 10) {
+    } else if(visor.textContent.length > 26) {
+        visor.style.fontSize = "8px";
+    } else if(visor.textContent.length > 20) {
+        visor.style.fontSize = "10px";
+    } else if(visor.textContent.length > 15) {
+        visor.style.fontSize = "small";
+    } else if(visor.textContent.length > 10) {
         visor.style.fontSize = "medium";
     }
-    if(visor.textContent.length > 15) {
-        visor.style.fontSize = "small";
-    }
-    if(visor.textContent.length > 20) {
-        visor.style.fontSize = "10px";
-    }
-    if(visor.textContent.length > 26) {
-        visor.style.fontSize = "8px";
-    }
-    // if(visor.textContent.length > 33) {
-    //     visor.style.fontSize = "7px";
-    // }
 }
 
 // Listeners
@@ -224,15 +216,32 @@ buttons.forEach(function(button) {
 });
 
 document.addEventListener("keydown", (e) => {
-    if (e.key.match(/[0-9]/)) {
-        console.log(e.key);
+    let key = e.key;
+    e.preventDefault();
+
+    if (key === "Enter") {
+        key = "=";
+    } else if (key === "Backspace") {
+        if(display.n1 || display.n2) {
+            key = "⬅";
+        } else {
+            key = "C";
+        }
+    } else if (key === "\\") {
+        if (display.n1 === "") {
+            key = "+/-";
+        } else if (display.n2 === "") {
+            key = "+/-";
+        }
     }
-    if (e.key.match(/^[+\-*/%]$/)) {
-        console.log(e.key);
+
+    const targetButton = Array.from(buttons).find(button => button.textContent === key);
+    if (targetButton) {
+        e.preventDefault();
+        targetButton.click();
     }
-    if (e.key.match(/^[=]$/) || e.key.match("Enter")) {
-        console.log(e.key);
-    }
+
+    console.log(key);
 });
 
 // Output Log
